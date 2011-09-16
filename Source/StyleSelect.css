@@ -1,0 +1,59 @@
+DIV.styleme {
+    padding: 3px 0px 3px 5px;
+    position: relative;
+    width: 100%;
+    text-transform: uppercase;
+
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+DIV.styleme > UL {
+    position: absolute;
+    width: 100%;
+    min-width: 100%;
+    overflow: hidden;
+    top: 6px;
+    left: 0px;
+    display: none;
+    min-height: 13px;
+    z-index: 1000;
+    background-color: #fff;
+    line-height: 12.85px;
+    padding: 3px 0px 9px;
+}
+DIV.styleme > UL.expanded {
+    display: block;
+    color: #000;
+}
+DIV.styleme > SPAN,
+DIV.styleme > UL LI {
+    font-style: normal;
+    font-weight: normal;
+    white-space: nowrap;
+    cursor: default;
+    color: #000;
+}
+DIV.styleme > SPAN {
+    position: absolute;
+    top: 4px;
+    width: 99%;
+    background: transparent none no-repeat right 2px;
+    padding: 0px;
+    overflow: hidden;
+    color: #000;
+}
+DIV.styleme > UL > LI:hover {
+    cursor: pointer;
+    background-position: 0 top;
+}
+DIV.styleme > UL LI.optgroup {
+    font-style: italic;
+    font-weight: bold;
+}
+DIV.styleme > UL LI.optgroup > SPAN {
+    display: block;
+}

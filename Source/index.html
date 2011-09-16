@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Kiosk Scroll</title>
+<link rel="stylesheet" href="StyleSelect.css" type="text/css" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/mootools/1.3/mootools-yui-compressed.js"></script>
+<script type="text/javascript" src="mootools-more-1.4.0.1.js"></script>
+<script type="text/javascript" src="StyleSelect.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+window.addEvent("domready", function() {
+	var SS = new StyleSelect({
+		element: document.getElement("SELECT"),
+		skipfirst: true
+	});
+});
+//]]>
+</script>
+</head>
+<body>
+
+<form>
+<fieldset>
+	<select class="testclass">
+		<option value="">Skip this</option>
+		<option value="Hello">World!</option>
+		<option value="value">Text</option>
+		<option>No value</option>
+	</select>
+</fieldset>
+</form>
+
+</body>
+</html>
