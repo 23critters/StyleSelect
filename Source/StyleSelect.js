@@ -2,13 +2,17 @@
 ---
 description: Create styleable Select boxes built on the MooTools Framework
 
-license: MIT-style
+license: 
+- MIT-style
 
 authors:
 - Thomas Kunambi, 23 Critters
 
 requires:
 - core/1.3: [Class, Element.Event, Element.Style, Element.Measure]
+
+provides: StyleSelect
+...
 */
 
 var StyleSelect = new Class({
