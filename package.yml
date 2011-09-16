@@ -2,6 +2,6 @@ name: StyleSelect
 author: kunambi
 category: Widgets
 tags: [select, form]
-current: 1.0
+current: v1.0
 copyright: "Thomas Kunambi, 23 Critters"
 description: Style your select boxes. Built on the MooTools Framework
