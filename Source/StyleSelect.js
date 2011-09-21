@@ -2,7 +2,7 @@
 ---
 description: Create styleable Select boxes built on the MooTools Framework
 
-license: 
+license:
 - MIT-style
 
 authors:
@@ -55,15 +55,15 @@ var StyleSelect = new Class({
             "events": {
                 "click": function(e) {
                     e.stop();
-                    var oUL = this.getElement("ul"),
-                        aUL = $$("select[style] + div > ul.root");
+                    var oUL = this.container.getElement("ul"),
+                        aUL = $$("select[style] + div." + this.options.cssClass + " > ul.root");
                     if (oUL.hasClass("expanded")) {
                         aUL.removeClass("expanded");
                     } else {
                         aUL.removeClass("expanded");
                         oUL.addClass("expanded");
                     }
-                }
+                }.bind(this)
             }
         }).inject(this.element, "after");
 
@@ -90,11 +90,20 @@ var StyleSelect = new Class({
     },
     reset: function() {
         this.list.set("html", "");
-        if (this.list.getNext("span")) {
-            this.list.getNext("span").dispose();
+        if (this.list.getNext("a")) {
+            this.list.getNext("a").dispose();
         }
 
-        this.showSelected = new Element("span", {
+        this.showSelected = new Element("a", {
+            "href": "",
+            "events": {
+                "click": function(e) {
+                    e.preventDefault();
+                },
+                "mousedown": function(e) {
+                    e.preventDefault();
+                }
+            },
             "html": this.element.getElements("option")[this.element.selectedIndex].get("text"),
             "data-value": this.element.getElements("option")[this.element.selectedIndex].get("data-value")
         }).inject(this.container);
@@ -120,7 +129,6 @@ var StyleSelect = new Class({
                         this.parent = oOpt.getParent();
                         this.list = this.list.getParent("ul");
                     }
-					console.log(this.element.selectedIndex, iCount);
                     var oLI = new Element("li", {
                         "class": (this.element.selectedIndex == iCount)?"selected":"",
                         "html": oOpt.get("text"),
@@ -171,7 +179,7 @@ var StyleSelect = new Class({
             this.container.removeEvents("change");
             this.container.getElements("li").addEvent("click", function(e) {
                 this.element.fireEvent("change", e);
-            }.bind(this))
+            }.bind(this));
         }
     }
 });
