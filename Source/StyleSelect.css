@@ -2,7 +2,6 @@ DIV.styleme {
     padding: 3px 0px 3px 5px;
     position: relative;
     width: 100%;
-    text-transform: uppercase;
 
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -11,17 +10,20 @@ DIV.styleme {
     -ms-user-select: none;
     user-select: none;
 }
+DIV.styleme UL {
+    list-style-type: none;
+    padding: 0px;
+}
 DIV.styleme > UL {
     position: absolute;
     width: 100%;
     min-width: 100%;
     overflow: hidden;
-    top: 115%;
+    top: 125%;
     left: 0;
     display: none;
     z-index: 1000;
     background-color: #fff;
-    padding: 3px 0 9px;
     margin: 0;
 }
 DIV.styleme > UL.expanded {
@@ -36,6 +38,9 @@ DIV.styleme > UL LI {
     cursor: default;
     color: #000;
 }
+DIV.styleme > UL LI.disabled {
+    color: graytext;
+}
 DIV.styleme > A {
     text-decoration: none;
     position: absolute;
@@ -46,15 +51,14 @@ DIV.styleme > A {
     overflow: hidden;
     color: #000;
 }
-DIV.styleme > UL > LI:hover {
-    cursor: pointer;
+DIV.styleme > UL LI.hover {
     background-position: 0 top;
+    background-color: highlight;
 }
 DIV.styleme > A:focus,
 DIV.styleme > A:hover,
-DIV.styleme > UL:hover + A,
-DIV.styleme > UL > LI:hover {
-    background-color: highlight;
+DIV.styleme > UL:hover + A {
+    outline: 1px solid highlight;
 }
 DIV.styleme > UL LI.optgroup {
     font-style: italic;
@@ -62,4 +66,7 @@ DIV.styleme > UL LI.optgroup {
 }
 DIV.styleme > UL LI.optgroup > SPAN {
     display: block;
+}
+DIV.styleme > UL LI.optgroup LI {
+    padding-left: 1em;
 }

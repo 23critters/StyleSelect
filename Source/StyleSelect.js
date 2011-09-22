@@ -59,9 +59,14 @@ var StyleSelect = new Class({
                         aUL = $$("select[style] + div." + this.options.cssClass + " > ul.root");
                     if (oUL.hasClass("expanded")) {
                         aUL.removeClass("expanded");
+                        document.removeEvent("keydown", this.fnNavigate);
                     } else {
                         aUL.removeClass("expanded");
                         oUL.addClass("expanded");
+                        oUL.getElements("li").removeClass("hover");
+                        var oLI = oUL.getElement("li.clicked")||oUL.getElement("li:first-child");
+                        oLI.addClass("hover");
+                        document.addEvent("keydown", this.fnNavigate);
                     }
                 }.bind(this)
             }
@@ -78,15 +83,70 @@ var StyleSelect = new Class({
             }
         }).inject(this.container);
 
-        this.rebuild();
+        this.fnNavigate = this._navigate.bind(this);
+
+        this._rebuild();
 
         if (this.options.inheritCSSClass) {
             this.container.addClass(this.element.get("class"));
         }
 
         document.addEvent("click", function(e) {
-            this.container.getElement("ul").removeClass("expanded")
+            this.container.getElement("ul").removeClass("expanded");
+            document.removeEvent("keydown", this.fnNavigate);
         }.bind(this));
+    },
+    _fnAlterClass: function(oAdd, mRemove, sClass) {
+        mRemove.removeClass(sClass);
+        oAdd.addClass(sClass);
+    },
+    _navigate: function(e) {
+        var oLI = this.container.getElement("li.hover"),
+            aLI = this.container.getElements("li:not(.optgroup)"),
+            oNext = null;
+
+        switch(e.key) {
+            case "down":
+                e.preventDefault();
+                if ((oNext = aLI[aLI.indexOf(oLI)+1])) {
+                    this._fnAlterClass(oNext, oLI, "hover");
+                }
+            break;
+            case "up":
+                e.preventDefault();
+                if ((oNext = aLI[aLI.indexOf(oLI)-1])) {
+                    this._fnAlterClass(oNext, oLI, "hover");
+                }
+            break;
+            case "enter":
+                if (oLI.get("html") && !oLI.getProperty("disabled")) {
+                    this._fnAlterClass(oLI, aLI, "clicked");
+                    this._setSelected(aLI.indexOf(oLI));
+                }
+                this.list.removeClass("expanded");
+            break;
+            case "esc":
+                this.container.getElement("ul").removeClass("expanded");
+                document.removeEvent("keydown", this.fnNavigate);
+            break;
+            default:
+                if (e.key.length == 1) {
+                    e.preventDefault();
+                    for (var i=0 ; i < aLI.length ; i++) {
+                        if (e.code == aLI[i].get("html").charCodeAt(0)) {
+                            this._fnAlterClass(aLI[i], aLI, "hover");
+                            break;
+                        }
+                    }
+                }
+            break;
+        }
+    },
+    _setSelected: function(idx) {
+        var oLI = this.list.getElement("li.clicked");
+        this.element.selectedIndex = idx;
+        this.showSelected.set("html", oLI.get("html"));
+        this.showSelected.set("data-value", oLI.get("data-value"));
     },
     reset: function() {
         this.list.set("html", "");
@@ -94,6 +154,7 @@ var StyleSelect = new Class({
             this.list.getNext("a").dispose();
         }
 
+        var oOption = this.element.getElements("option")[this.element.selectedIndex]||new Element("option", {"text":"","data-value":""});
         this.showSelected = new Element("a", {
             "href": "",
             "events": {
@@ -104,8 +165,8 @@ var StyleSelect = new Class({
                     e.preventDefault();
                 }
             },
-            "html": this.element.getElements("option")[this.element.selectedIndex].get("text"),
-            "data-value": this.element.getElements("option")[this.element.selectedIndex].get("data-value")
+            "html": oOption.get("text"),
+            "data-value": oOption.get("data-value")
         }).inject(this.container);
     },
     /**
@@ -117,11 +178,11 @@ var StyleSelect = new Class({
             "value": this.showSelected.get("data-value")
         }
     },
-    rebuild: function() {
+    _rebuild: function() {
         this.reset();
 
         var iCount = 0;
-        this.element.getElements("option,optgroup").each(function(oOpt, idx) {
+        this.element.getElements("option,optgroup").each(function(oOpt) {
             var bOption = oOpt.get("tag") == "option";
             if (bOption) {
                 if (!this.options.skipfirst || iCount > 0) {
@@ -134,19 +195,23 @@ var StyleSelect = new Class({
                         "html": oOpt.get("text"),
                         "data-value": oOpt.get("value"),
                         "events": {
-                            "click": function() {
-                                var oLIdx = arguments[0];
-                                this.list.getElements("li").removeClass("clicked");
-								this.list.getElements("li")[oLIdx + (this.options.skipfirst?-1:0)].addClass("clicked");
-                                if (oOpt.get("value") && !oOpt.getProperty("disabled")) {
-                                    this.element.selectedIndex = oLIdx;
-                                    this.showSelected.set("html", oLI.get("html"));
-                                    this.showSelected.set("data-value", oLI.get("data-value"));
+                            "click": function(e) {
+                                if (!e.target.hasClass("disabled")) {
+                                    this._fnAlterClass(e.target, this.list.getElements("li"), "clicked");
+                                    this._setSelected(this.list.getElements("li:not(.optgroup)").indexOf(e.target));
+                                    oLI.getParent("ul.root").fireEvent("click");
                                 }
-                                oLI.getParent("ul.root").fireEvent("click");
-                            }.bind(this, iCount)
+                            }.bind(this),
+                            "mouseover": function(e) {
+                                if (!e.target.hasClass("disabled")) {
+                                    this._fnAlterClass(e.target, this.container.getElements("li"), "hover");
+                                }
+                            }.bind(this)
                         }
                     }).inject(this.list);
+                    if (oOpt.hasAttribute("disabled")) {
+                        oLI.addClass("disabled")
+                    }
                 }
                 iCount++;
             } else {
@@ -156,7 +221,6 @@ var StyleSelect = new Class({
                         "data-value": ""
                     }).inject(this.list),
                     oUL = new Element("ul", {
-                        "id": "ul-" + idx,
                         "class": "ul-" + oOpt.get("tag")
                     }).inject(oLIGroup);
 

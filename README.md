@@ -1,7 +1,9 @@
 Style Select
 ===========
 
-Style Select is a nifty widget that allows you to style a Select box with CSS.
+Style Select is a nifty widget that allows you to style a SELECT box with CSS.
+This widget respects one level of OPTGROUP, aswell as OPTION[disabled] attribute
+It tries to mimic a default SELECT in its behaviour as much as possible.
 
 
 How to use
@@ -22,10 +24,13 @@ HTML snippet:
 	<form>
 	<fieldset>
 		<select>
-			<option value="">Skip this</option>
-			<option value="Hello">World!</option>
-			<option value="value">Text</option>
-			<option>No value</option>
+            <option value="">Skip this</option>
+            <option value="Hello">World!</option>
+            <optgroup label="test">
+                <option value="value">Text</option>
+                <option value="Ooops" disabled>Disabled</option>
+            </optgroup>
+            <option>No value</option>
 		</select>
 	</fieldset>
 	</form>
@@ -51,6 +56,15 @@ The following methods are availible publicly:
 
 Notes
 -----------------
+
+Version 1.1
+
+    * Won't throw an error if the SELECT lack OPTION elements
+    * Fixed bug with OPTGROUP
+    * Can use up/down arrow keys to highlight an option
+    * Can use Enter key to select an option
+    * Can use Escape key to close the StyleSelect
+    * Can use any key character to pick the first occurence in the list
 
 Version 1.0
 
