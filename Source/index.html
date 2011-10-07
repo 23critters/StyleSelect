@@ -13,8 +13,9 @@ SELECT.test-d {
     clear: both;
     float: left;
 }
+FIELDSET,
 DIV {
-    clear: both;
+    width: 200px;
     float: left;
 }
 </style>
@@ -46,7 +47,7 @@ window.addEvent("domready", function() {
 
 <form>
 <fieldset>
-	<select class="test-a">
+	<select class="test-a blue">
 		<option value="">Skip this</option>
 		<option value="Hello">World!</option>
         <optgroup label="test">
@@ -65,8 +66,9 @@ window.addEvent("domready", function() {
         </optgroup>
 		<option>No value</option>
 	</select>
-
-    <select class="test-c" multiple size="3">
+</fieldset>
+<fieldset>
+    <select class="test-c blue" multiple size="3">
         <option value="">Skip this</option>
         <option selected value="Hello">World!</option>
         <option value="Goodbye">Death!</option>

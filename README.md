@@ -62,6 +62,10 @@ The following methods are availible publicly:
 Notes
 -----------------
 
+Version 1.2.1
+
+    * Bugfix for IE7 which returns erroneous values for Element.getComputedSize()
+
 Version 1.2
 
     * Now have support for SELECT[multiple] attribute!

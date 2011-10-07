@@ -58,17 +58,22 @@ var StyleSelect = new Class({
         }
     },
     _setup: function() {
-        var iElementSize = this.element.getComputedSize();
         this.oCss = this.options.cssActions;
         this.container = new Element("div", {
             "class": this.options.cssClass,
             "styles": {
-                "height": iElementSize.height.toInt(),
-                "width": iElementSize.width.toInt(),
                 "padding": Object.values(this.element.getStyles("padding")).toString(),
                 "margin": Object.values(this.element.getStyles("margin")).toString()
             }
         }).inject(this.element, "after");
+
+        if (!(Browser.ie && Browser.version <= 7)) {
+            var iElementSize = this.element.getComputedSize();
+            this.container.setStyles({
+                "height": iElementSize.height.toInt(),
+                "width": iElementSize.width.toInt()
+            })
+        }
 
         this.element.setStyle("display", "none");
 
