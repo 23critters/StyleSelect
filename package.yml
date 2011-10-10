@@ -2,6 +2,6 @@ name: StyleSelect
 author: kunambi
 category: Forms
 tags: [select, form]
-current: v1.2
+current: v1.3
 copyright: "Thomas Kunambi, 23 Critters"
 description: Style Select is a nifty widget that allows you to style a SELECT box with CSS
