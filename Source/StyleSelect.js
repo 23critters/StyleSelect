@@ -156,6 +156,10 @@ var StyleSelect = new Class({
         var aLI = this.list.getElements("li:not(." + this.oCss.o + ")");
         this.element.getElements("option").set("selected", false);
         aLI.each(function(oLI, idx) {
+            var oCheckbox = null;
+            if ((oCheckbox = oLI.getElement("input[type=checkbox]"))) {
+                oCheckbox.set("checked", oLI.hasClass(this.oCss.c));
+            }
             if (oLI.hasClass(this.oCss.c)) {
                 this.element.getElements("option")[idx].set("selected", true);
                 if (this.showSelected) {
@@ -199,7 +203,24 @@ var StyleSelect = new Class({
                         "html": oOpt.get("text"),
                         "data-value": oOpt.get("value")
                     }).inject(this.list);
-                    if (oOpt.hasAttribute(this.oCss.d)) {
+                    if (this.options.checkboxes) {
+                        oLI.set("html", "");
+                        oLI.adopt(
+                            new Element("label", {
+                                "html": oOpt.get("text"),
+                                "events": {
+                                    "click": function(e) {
+                                        e.preventDefault();
+                                    }
+                                }
+                            }).grab(
+                                new Element("input", {
+                                    "type": "checkbox"
+                                }), "top"
+                            )
+                        )
+                    }
+                    if (oOpt.hasAttribute("disabled")) {
                         oLI.addClass(this.oCss.d)
                     }
                 }
@@ -313,7 +334,8 @@ StyleSelect.Simple = new Class({
 StyleSelect.Multiple = new Class({
     Extends: StyleSelect,
     options: {
-        size: 4
+        size: 4,
+        checkboxes: false
     },
     initialize: function(options) {
         this.setOptions(options);
@@ -323,7 +345,7 @@ StyleSelect.Multiple = new Class({
 
         this.container.addClass(this.oCss.m);
         var iSize = this.options.size||this.element.getProperty("size");
-        this.container.setStyle("height", this.list.getElement("li:first-child").getSize().y * iSize)
+        this.container.setStyle("height", this.list.getElement("li:first-child").getSize().y * iSize);
         this.list.getElements("li").each(function(oLI) {
             if (oLI.hasClass(this.oCss.s)) {
                 oLI.addClass(this.oCss.c)
@@ -353,15 +375,16 @@ StyleSelect.Multiple = new Class({
             }.bind(this)
         });
 
-        var aLI = this.list.getElements("li");
+        var aLI = this.list.getElements("li:not(.optgroup)");
         aLI.each(function(oLI) {
             oLI.addEvents({
                 "click": function(e) {
-                    if (!e.target.hasClass(this.oCss.d)) {
+                    var oTarget = (e.target == oLI)?e.target:oLI;
+                    if (!oTarget.hasClass(this.oCss.d)) {
                         if (e.control) {
-                            e.target.addClass(this.oCss.c);
+                            oTarget.addClass(this.oCss.c);
                         } else {
-                            this._fnAlterClass(e.target, aLI, this.oCss.c);
+                            this._fnAlterClass(oTarget, aLI, this.oCss.c);
                         }
                         this._setSelected();
                         this.list.fireEvent("focus", e);

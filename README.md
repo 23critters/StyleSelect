@@ -48,6 +48,8 @@ Options
     skipfirst: (boolean) should it skip the first OPTION in the list? | default: false
     size: (integer) how many options should be visible? set value to 0 or null if you want size-attribute to dictate this option | default: 4
         NB! Only works with [multiple] attribute set
+    checkboxes: (boolean) show checkboxes with each option | default: false
+        NB! Only works with [multiple] attribute set
 
 
 Methods
@@ -61,6 +63,10 @@ The following methods are availible publicly:
 
 Notes
 -----------------
+
+Version 1.3
+
+    * Added option to show checkboxes when showing multiple options, they're purely esthetic
 
 Version 1.2.1
 
