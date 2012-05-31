@@ -1,3 +1,5 @@
+@import "blue.css";
+
 DIV.styleme {
     padding: 3px 0px 3px 5px;
     position: relative;
@@ -62,9 +64,6 @@ DIV.styleme > A {
     overflow: hidden;
     color: #000;
 }
-DIV.styleme > UL LABEL {
-    display: block;
-}
 DIV.styleme.multiple > UL LI.hover {
     background-color: transparent;
     outline: 1px dotted highlight;
@@ -82,6 +81,7 @@ DIV.styleme > UL LI.optgroup {
     font-style: italic;
     font-weight: bold;
 }
+DIV.styleme > UL LABEL,
 DIV.styleme > UL LI.optgroup > SPAN {
     display: block;
 }
