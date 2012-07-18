@@ -24,13 +24,18 @@ DIV.styleme UL {
 DIV.styleme > UL {
     position: absolute;
     width: 100%;
-    overflow: hidden;
-    top: 125%;
+    overflow-x: hidden;
+	overflow-y: auto;
+    top: 105%;
     left: 0;
     display: none;
     z-index: 1000;
     background-color: window;
     margin: 0;
+}
+DIV.styleme > UL.bottom {
+    top: auto;
+	bottom: 105%;
 }
 DIV.styleme.multiple > UL {
     position: static;
@@ -63,6 +68,7 @@ DIV.styleme > A {
     padding: 0;
     overflow: hidden;
     color: #000;
+	text-overflow: ellipsis;
 }
 DIV.styleme.multiple > UL LI.hover {
     background-color: transparent;

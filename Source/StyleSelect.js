@@ -21,6 +21,7 @@ var StyleSelect = new Class({
         cloneEvents: true,
         cssClass: "styleme",
         cssActions: {
+            b: "bottom",
             c: "clicked",
             d: "disabled",
             e: "expanded",
@@ -30,7 +31,8 @@ var StyleSelect = new Class({
             s: "selected"
         },
         inheritCSSClass: true,
-        skipfirst: false
+        skipfirst: false,
+        usetitles: false
     },
     /**
         @constructor
@@ -72,7 +74,7 @@ var StyleSelect = new Class({
             this.container.setStyles({
                 "height": iElementSize.height.toInt(),
                 "width": iElementSize.width.toInt()
-            })
+            });
         }
 
         this.element.setStyle("display", "none");
@@ -91,6 +93,7 @@ var StyleSelect = new Class({
 
         document.addEvent("click", function(e) {
             this.list.removeClass(this.oCss.e);
+            this.list.removeProperty("style");
             this.list.fireEvent("blur", e);
             document.removeEvent("keydown", this.fnNavigate);
         }.bind(this));
@@ -133,17 +136,19 @@ var StyleSelect = new Class({
                     this._fnAlterClass(oLI, aLI, this.oCss.c);
                     this._setSelected();
                     this.list.removeClass(this.oCss.e);
+                    this.list.removeProperty("style");
                 }
             break;
             case "esc":
                 this.container.getElement("ul").removeClass(this.oCss.e);
+                this.list.removeProperty("style");
                 document.removeEvent("keydown", this.fnNavigate);
             break;
             default:
-                if (e.key.length == 1) {
+                if (e.key.length === 1) {
                     e.preventDefault();
                     for (var i=0 ; i < aLI.length ; i++) {
-                        if (e.code == aLI[i].get("html").charCodeAt(0)) {
+                        if (e.code === aLI[i].get("html").charCodeAt(0)) {
                             this._fnAlterClass(aLI[i], aLI, this.oCss.h);
                             break;
                         }
@@ -164,10 +169,11 @@ var StyleSelect = new Class({
                 this.element.getElements("option")[idx].set("selected", true);
                 if (this.showSelected) {
                     this.showSelected.set("html", oLI.get("html"));
+                    this.showSelected.set("title", oLI.get("html"));
                     this.showSelected.set("data-value", oLI.get("data-value"));
                 }
             }
-        }, this)
+        }, this);
     },
     /**
     * @return {Array} An array is returned with every selected option, text & value. Will break backward compability for v1.1
@@ -175,13 +181,13 @@ var StyleSelect = new Class({
     getSelected: function() {
         var aReturn = [],
             oSelected = Object.filter(this.element.getElements("option"), function(oOption) {
-                if (typeof oOption == "object") {
+                if (typeof oOption === "object") {
                     return oOption.get("selected");
                 }
             });
 
         Object.each(oSelected, function(oOpt) {
-            aReturn.include({option: oOpt, "value":oOpt.get("value"),"text":oOpt.get("text")})
+            aReturn.include({option: oOpt, "value":oOpt.get("value"),"text":oOpt.get("text")});
         });
 
         return aReturn;
@@ -191,7 +197,7 @@ var StyleSelect = new Class({
 
         var iCount = 0;
         this.element.getElements("option,optgroup").each(function(oOpt) {
-            var bOption = oOpt.get("tag") == "option";
+            var bOption = oOpt.get("tag") === "option";
             if (bOption) {
                 if (!this.options.skipfirst || iCount > 0) {
                     if (oOpt.getParent() !== this.o_parent) {
@@ -201,6 +207,7 @@ var StyleSelect = new Class({
                     var oLI = new Element("li", {
                         "class": (oOpt.selected)?this.oCss.s:"",
                         "html": oOpt.get("text"),
+                        "title": (this.options.usetitles)?oOpt.get("text"):"",
                         "data-value": oOpt.get("value")
                     }).inject(this.list);
                     if (this.options.checkboxes) {
@@ -218,10 +225,10 @@ var StyleSelect = new Class({
                                     "type": "checkbox"
                                 }), "top"
                             )
-                        )
+                        );
                     }
                     if (oOpt.hasAttribute("disabled")) {
-                        oLI.addClass(this.oCss.d)
+                        oLI.addClass(this.oCss.d);
                     }
                 }
                 iCount++;
@@ -270,15 +277,35 @@ StyleSelect.Simple = new Class({
 
         this.container.addEvent("click", function(e) {
             e.stop();
+            e.preventDefault();
+            // TODO: fix bug that triggers when opening list with the enter key
             var oUL = this.list,
-                aUL = $$("select[style] + div." + this.options.cssClass + " > ul.root");
+                aUL = $$("select[style] + div." + this.options.cssClass + " > ul.root"),
+                aParentCheck = [],
+                fnHasFixedParent = function() {
+                    var aParents = oUL.getParents("*:not(body):not(html)"),
+                        aFiltered = aParents.filter(function(oEl) {
+                            return oEl.getStyle("position") === "fixed";
+                        });
+                    return !!aFiltered.length;
+                };
             if (oUL.hasClass(this.oCss.e)) {
                 aUL.removeClass(this.oCss.e);
+                this.list.removeProperty("style");
                 document.removeEvent("keydown", this.fnNavigate);
             } else {
-                var oLI = oUL.getElement("li." + this.oCss.c)||oUL.getElement("li:first-child");
+                var oLI = oUL.getElement("li." + this.oCss.c)||oUL.getElement("li:first-child"),
+                    iWindowHeight = window.getSize().y,
+                    iWindowScroll = window.getScrollSize().y,
+                    bAnchoredBottom = false;
                 this._fnAlterClass(oLI, oUL.getElements("li"), this.oCss.h);
                 this._fnAlterClass(oUL, aUL, this.oCss.e);
+                var oCoords = oUL.getCoordinates();
+                if (oCoords.top + oCoords.height > (fnHasFixedParent()?iWindowHeight:iWindowScroll)) {
+                    oUL.addClass(this.oCss.b);
+                    bAnchoredBottom = !bAnchoredBottom;
+                }
+                oUL.setStyle("max-height", iWindowHeight - (iWindowHeight - (bAnchoredBottom?this.container.getCoordinates().top:this.container.getCoordinates().bottom)));
                 document.addEvent("keydown", this.fnNavigate);
             }
         }.bind(this));
@@ -302,6 +329,7 @@ StyleSelect.Simple = new Class({
                 }
             },
             "html": oOption.get("text"),
+            "title": (this.options.usetitles)?oOption.get("text"):"",
             "data-value": oOption.get("data-value")
         }).inject(this.container);
     },
@@ -327,7 +355,7 @@ StyleSelect.Simple = new Class({
                     }
                 }.bind(this)
             });
-        }, this)
+        }, this);
     }
 });
 
@@ -348,9 +376,9 @@ StyleSelect.Multiple = new Class({
         this.container.setStyle("height", this.list.getElement("li:first-child").getSize().y * iSize);
         this.list.getElements("li").each(function(oLI) {
             if (oLI.hasClass(this.oCss.s)) {
-                oLI.addClass(this.oCss.c)
+                oLI.addClass(this.oCss.c);
             }
-        }, this)
+        }, this);
     },
     _reset: function() {
         this.list.set("html", "");
@@ -364,6 +392,7 @@ StyleSelect.Multiple = new Class({
                 var oUL = this.list,
                     aUL = $$("select[style] + div." + this.options.cssClass + " > ul.root");
                 aUL.removeClass(this.oCss.e);
+                aUL.removeProperty("style");
 
                 var oLI = oUL.getElement("li." + this.oCss.c)||oUL.getElement("li:first-child");
                 this._fnAlterClass(oLI, oUL.getElements("li"), this.oCss.h);
@@ -379,7 +408,7 @@ StyleSelect.Multiple = new Class({
         aLI.each(function(oLI) {
             oLI.addEvents({
                 "click": function(e) {
-                    var oTarget = (e.target == oLI)?e.target:oLI;
+                    var oTarget = (e.target === oLI)?e.target:oLI;
                     if (!oTarget.hasClass(this.oCss.d)) {
                         if (e.control) {
                             oTarget.addClass(this.oCss.c);
@@ -391,6 +420,6 @@ StyleSelect.Multiple = new Class({
                     }
                 }.bind(this)
             });
-        }, this)
+        }, this);
     }
 });
