@@ -5,7 +5,7 @@ Style Select is a nifty widget that allows you to style a SELECT box with CSS.
 This widget respects one level of OPTGROUP, aswell as OPTION[disabled] attribute
 It tries to mimic a default SELECT in its behaviour as much as possible.
 
-![Screenshot](http://23c.se/StyleSelect/screenshot.png)
+![Screenshot](https://github.com/23critters/StyleSelect/raw/master/screenshot.png)
 
 How to use
 ----------
@@ -50,6 +50,7 @@ Options
         NB! Only works with [multiple] attribute set
     checkboxes: (boolean) show checkboxes with each option | default: false
         NB! Only works with [multiple] attribute set
+	usetitles: (boolean) if you want to add the option.text to the list' title-attribute | default: false
 
 
 Methods
@@ -61,9 +62,21 @@ The following methods are availible publicly:
     rebuild: (void)         rebuild the StyleSelect to its default state
 
 
-Notes
+Known bugs
 -----------------
 
+	* If list is opened with enter key, you can't close it when hitting the enter key
+
+
+Notes
+-----------------
+Version 1.4
+
+	* Added option to add title-attribute to the list (taken from option.text)
+	* Fixed bug: if list is too tall, set max-height and allow the contents to scroll
+	* Fixed bug: if any parent has fixed property and is too close to the bottom of the screen, then flow the list upwards
+	* Removed bundled minified js-file
+	
 Version 1.3
 
     * Added option to show checkboxes when showing multiple options, they're purely esthetic
