@@ -76,6 +76,7 @@ Version 1.5
 	* Fixed bug: when using rebuild(), old events weren't removed properly.
 	* Fixed bug: when opening the list with the enter key, one couldn't close it when selecting an item with the enter key
 	* Fixed bug: lists that grew upwards got the wrong max-height the second time one clicked them
+	* Fixed bug: When you click on an option you the document event wasn't removed.
 	* New public method: getSelectElem() returns the select box we're using for StyleSelect
 	* Added option: {r: "root"}, now you should never encounter css-conflicts
 
