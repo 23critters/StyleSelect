@@ -42,7 +42,7 @@ Options
 
     element: (string||object) reference to select dom element container. if passing a string, supply it's id
     cssClass: (string) css class of the container | default: "styleme"
-    cssActions: (object) the names of the CSS classes used by the widget. Please change if you have conflicting CSS classes in your project. | default: {c: "clicked", d: "disabled", e: "expanded", h: "hover", m: "multiple", o: "optgroup", s: "selected"}
+    cssActions: (object) the names of the CSS classes used by the widget. Please change if you have conflicting CSS classes in your project. | default: {b: "bottom", c: "clicked", d: "disabled", e: "expanded", h: "hover", m: "multiple", o: "optgroup", r: "root", s: "selected"}
     inheritCSSClass: (boolean) should it keep any existing css class instead of replacing with cssClass | default: true
     cloneEvents: (boolean) should it keep any existing events previously attached | default: true
     skipfirst: (boolean) should it skip the first OPTION in the list? | default: false
@@ -59,17 +59,26 @@ Methods
 The following methods are availible publicly:
 
     getSelected: (array)    retrieve the value and text of the selected StyleSelect
+	getSelectElem: (object)		returns the select box we're using for StyleSelect
     rebuild: (void)         rebuild the StyleSelect to its default state
 
 
 Known bugs
 -----------------
 
-	* If list is opened with enter key, you can't close it when hitting the enter key
+	* None! \o/
 
 
 Notes
 -----------------
+Version 1.5
+
+	* Fixed bug: when using rebuild(), old events weren't removed properly.
+	* Fixed bug: when opening the list with the enter key, one couldn't close it when selecting an item with the enter key
+	* Fixed bug: lists that grew upwards got the wrong max-height the second time one clicked them
+	* New public method: getSelectElem() returns the select box we're using for StyleSelect
+	* Added option: {r: "root"}, now you should never encounter css-conflicts
+
 Version 1.4
 
 	* Added option to add title-attribute to the list (taken from option.text)

@@ -28,6 +28,7 @@ var StyleSelect = new Class({
             h: "hover",
             m: "multiple",
             o: "optgroup",
+            r: "root",
             s: "selected"
         },
         inheritCSSClass: true,
@@ -53,11 +54,7 @@ var StyleSelect = new Class({
             throw e;
         }
 
-        if (!options.element.getProperty("multiple")) {
-            return new StyleSelect.Simple(options);
-        } else {
-            return new StyleSelect.Multiple(options);
-        }
+        return (!options.element.getProperty("multiple"))?new StyleSelect.Simple(options):new StyleSelect.Multiple(options);
     },
     _setup: function() {
         this.oCss = this.options.cssActions;
@@ -80,7 +77,7 @@ var StyleSelect = new Class({
         this.element.setStyle("display", "none");
 
         this.list = new Element("ul", {
-            "class": "root"
+            "class": this.oCss.r
         }).inject(this.container);
 
         this.fnNavigate = this._navigate.bind(this);
@@ -105,6 +102,7 @@ var StyleSelect = new Class({
     _navigate: function(e) {
         var oLI = this.container.getElement("li." + this.oCss.h),
             aLI = this.container.getElements("li:not(." + this.oCss.o + ",." + this.oCss.d + ")"),
+            iALILength = aLI.length,
             oNext = null;
 
         switch(e.key) {
@@ -135,10 +133,7 @@ var StyleSelect = new Class({
                 if (oLI.get("html") && !oLI.hasClass(this.oCss.d)) {
                     this._fnAlterClass(oLI, aLI, this.oCss.c);
                     this._setSelected();
-                    this.list.removeClass(this.oCss.e);
-                    this.list.removeProperty("style");
                 }
-            break;
             case "esc":
                 this.container.getElement("ul").removeClass(this.oCss.e);
                 this.list.removeProperty("style");
@@ -147,7 +142,7 @@ var StyleSelect = new Class({
             default:
                 if (e.key.length === 1) {
                     e.preventDefault();
-                    for (var i=0 ; i < aLI.length ; i++) {
+                    for (var i=0 ; i < iALILength ; i++) {
                         if (e.code === aLI[i].get("html").charCodeAt(0)) {
                             this._fnAlterClass(aLI[i], aLI, this.oCss.h);
                             break;
@@ -191,6 +186,9 @@ var StyleSelect = new Class({
         });
 
         return aReturn;
+    },
+    getSelectElem: function() {
+        return this.element;
     },
     rebuild: function() {
         this._reset();
@@ -278,17 +276,18 @@ StyleSelect.Simple = new Class({
         this.container.addEvent("click", function(e) {
             e.stop();
             e.preventDefault();
-            // TODO: fix bug that triggers when opening list with the enter key
             var oUL = this.list,
-                aUL = $$("select[style] + div." + this.options.cssClass + " > ul.root"),
+                aUL = $$("select[style] + div." + this.options.cssClass + " > ul." + this.oCss.r),
+                iXAxis = e.client.x, // if negative value, it was opened with enter key
                 aParentCheck = [],
                 fnHasFixedParent = function() {
-                    var aParents = oUL.getParents("*:not(body):not(html)"),
+                    var aParents = oUL.getParents("*:not(html,body)"),
                         aFiltered = aParents.filter(function(oEl) {
                             return oEl.getStyle("position") === "fixed";
                         });
                     return !!aFiltered.length;
                 };
+            oUL.removeClass(this.oCss.b);
             if (oUL.hasClass(this.oCss.e)) {
                 aUL.removeClass(this.oCss.e);
                 this.list.removeProperty("style");
@@ -306,11 +305,13 @@ StyleSelect.Simple = new Class({
                     bAnchoredBottom = !bAnchoredBottom;
                 }
                 oUL.setStyle("max-height", iWindowHeight - (iWindowHeight - (bAnchoredBottom?this.container.getCoordinates().top:this.container.getCoordinates().bottom)));
+                this.showSelected.blur();
                 document.addEvent("keydown", this.fnNavigate);
             }
         }.bind(this));
     },
     _reset: function() {
+        this._clearCustomEvents();
         this.list.set("html", "");
         var oA = null;
         if ((oA = this.list.getNext("a"))) {
@@ -332,6 +333,11 @@ StyleSelect.Simple = new Class({
             "title": (this.options.usetitles)?oOption.get("text"):"",
             "data-value": oOption.get("data-value")
         }).inject(this.container);
+    },
+    _clearCustomEvents: function() {
+        this.list.removeEvents("click");
+        this.list.getElements("li").removeEvents("mouseover");
+        this.list.getElements("li").removeEvents("click");
     },
     _addCustomEvents: function() {
         this.list.addEvent("click", function(e) {
@@ -381,7 +387,14 @@ StyleSelect.Multiple = new Class({
         }, this);
     },
     _reset: function() {
+        this._clearCustomEvents();
         this.list.set("html", "");
+    },
+    _clearCustomEvents: function() {
+        this.list.removeEvents("click");
+        this.list.removeEvents("focus");
+        this.list.removeEvents("blur");
+        this.list.getElements("li").removeEvents("click");
     },
     _addCustomEvents: function() {
         this.list.addEvents({
@@ -390,7 +403,7 @@ StyleSelect.Multiple = new Class({
             },
             "focus": function(e) {
                 var oUL = this.list,
-                    aUL = $$("select[style] + div." + this.options.cssClass + " > ul.root");
+                    aUL = $$("select[style] + div." + this.options.cssClass + " > ul." + this.oCss.r);
                 aUL.removeClass(this.oCss.e);
                 aUL.removeProperty("style");
 
