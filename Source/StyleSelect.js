@@ -343,7 +343,7 @@ StyleSelect.Simple = new Class({
         this.list.addEvent("click", function(e) {
             e.stopPropagation();
             e.preventDefault();
-            this.list.toggleClass(this.oCss.e);
+            this.list.removeClass(this.oCss.e);
         }.bind(this));
 
         var aLI = this.list.getElements("li");

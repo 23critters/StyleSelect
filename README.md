@@ -71,6 +71,10 @@ Known bugs
 
 Notes
 -----------------
+Version 1.5.1
+
+	* Fixed bug: when clicking in the list, sometimes the list wouldn't hide
+
 Version 1.5
 
 	* Fixed bug: when using rebuild(), old events weren't removed properly.
