@@ -71,6 +71,10 @@ Known bugs
 
 Notes
 -----------------
+Version 1.5.2
+
+	* Fixed bug: if skipfirst was true, the wrong option would be sent to server
+
 Version 1.5.1
 
 	* Fixed bug: when clicking in the list, sometimes the list wouldn't hide

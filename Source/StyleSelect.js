@@ -161,7 +161,8 @@ var StyleSelect = new Class({
                 oCheckbox.set("checked", oLI.hasClass(this.oCss.c));
             }
             if (oLI.hasClass(this.oCss.c)) {
-                this.element.getElements("option")[idx].set("selected", true);
+				var offset = this.options.skipfirst?1:0;
+                this.element.getElements("option")[idx + offset].set("selected", true);
                 if (this.showSelected) {
                     this.showSelected.set("html", oLI.get("html"));
                     this.showSelected.set("title", oLI.get("html"));
