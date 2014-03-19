@@ -1,64 +1,43 @@
-
 DIV.styleme {
-    padding: 3px 0px 3px 5px;
-    position: relative;
-    width: 100%;
-    font-family: caption, serif;
-
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-DIV.styleme.multiple {
+  -webkit-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative; }
+  DIV.styleme.multiple {
     overflow-y: scroll;
-    outline: 1px solid windowframe;
-}
-DIV.styleme UL {
+    outline: 1px solid windowframe; }
+    DIV.styleme.multiple > UL {
+      position: static;
+      top: auto;
+      left: auto;
+      display: block; }
+  DIV.styleme UL {
     list-style-type: none;
-    padding: 0px;
-}
-DIV.styleme > UL {
+    padding: 0; }
+  DIV.styleme > UL {
     position: absolute;
     width: 100%;
     overflow-x: hidden;
-	overflow-y: auto;
+    overflow-y: auto;
     top: 105%;
     left: 0;
     display: none;
     z-index: 1000;
     background-color: window;
-    margin: 0;
-}
-DIV.styleme > UL.bottom {
-    top: auto;
-	bottom: 105%;
-}
-DIV.styleme.multiple > UL {
-    position: static;
-    top: auto;
-    left: auto;
-    display: block;
-}
-DIV.styleme > UL.expanded {
-    display: block;
-}
-DIV.styleme > A {
-    color: inherit;
-}
-DIV.styleme > A,
-DIV.styleme > UL LI {
-    font-style: normal;
-    font-weight: normal;
-    white-space: nowrap;
-    cursor: default;
-}
-DIV.styleme > UL LI.disabled {
-    color: graytext;
-}
-DIV.styleme > A {
+    margin: 0; }
+    DIV.styleme > UL.bottom {
+      top: auto;
+      bottom: 105%; }
+    DIV.styleme > UL.expanded {
+      display: block; }
+  DIV.styleme > A {
     text-decoration: none;
     position: absolute;
     top: 4px;
@@ -67,29 +46,32 @@ DIV.styleme > A {
     padding: 0;
     overflow: hidden;
     color: #000;
-	text-overflow: ellipsis;
-}
-DIV.styleme.multiple > UL LI.hover {
-    background-color: transparent;
-    outline: 1px dotted highlight;
-}
-DIV.styleme > UL LI.hover,
-DIV.styleme.multiple > UL LI.clicked {
-    background-color: highlight;
-}
-DIV.styleme > A:focus,
-DIV.styleme > A:hover,
-DIV.styleme > UL:hover + A {
-    outline: 1px solid highlight;
-}
-DIV.styleme > UL LI.optgroup {
-    font-style: italic;
-    font-weight: bold;
-}
-DIV.styleme > UL LABEL,
-DIV.styleme > UL LI.optgroup > SPAN {
-    display: block;
-}
-DIV.styleme > UL LI.optgroup LI {
-    padding-left: 1em;
-}
+    text-overflow: ellipsis; }
+  DIV.styleme > A,
+  DIV.styleme > UL LI {
+    font-style: normal;
+    font-weight: normal;
+    white-space: nowrap;
+    cursor: default; }
+    DIV.styleme > A.disabled,
+    DIV.styleme > UL LI.disabled {
+      color: graytext; }
+    DIV.styleme > A.hover,
+    DIV.styleme > UL LI.hover {
+      background-color: transparent;
+      outline: 1px dotted highlight; }
+    DIV.styleme > A.hover, DIV.styleme > A.clicked,
+    DIV.styleme > UL LI.hover,
+    DIV.styleme > UL LI.clicked {
+      background-color: highlight; }
+    DIV.styleme > A.optgroup,
+    DIV.styleme > UL LI.optgroup {
+      font-style: italic;
+      font-weight: bold; }
+      DIV.styleme > A.optgroup LI,
+      DIV.styleme > UL LI.optgroup LI {
+        padding-left: 1em; }
+  DIV.styleme > UL LI
+  > UL LABEL,
+  DIV.styleme > UL LI.optgroup > SPAN {
+    display: block; }

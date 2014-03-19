@@ -71,6 +71,13 @@ Known bugs
 
 Notes
 -----------------
+Version 1.6
+
+	* Removed dependency of Element.Measure
+	* Fixed bug: if inheritCSSClass was true, and the element had no css-class, the container would get "null" as class
+	* Added SCSS-file which is easier to include into your projects. Will build CSS from the SCSS-file in the future.
+	* index.html is now using latest version of MooTools 1.4-branch
+
 Version 1.5.2
 
 	* Fixed bug: if skipfirst was true, the wrong option would be sent to server

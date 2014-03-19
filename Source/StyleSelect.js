@@ -9,7 +9,7 @@ authors:
 - Thomas Kunambi, 23 Critters
 
 requires:
-- core/1.3: [Class, Element.Event, Element.Style, Element.Measure]
+- core/1.3: [Class, Element.Event, Element.Style]
 
 provides: StyleSelect
 ...
@@ -66,13 +66,10 @@ var StyleSelect = new Class({
             }
         }).inject(this.element, "after");
 
-        if (!(Browser.ie && Browser.version <= 7)) {
-            var iElementSize = this.element.getComputedSize();
-            this.container.setStyles({
-                "height": iElementSize.height.toInt(),
-                "width": iElementSize.width.toInt()
-            });
-        }
+        this.container.setStyles({
+            "height": this.element.offsetHeight,
+            "width": this.element.offsetWidth
+        });
 
         this.element.setStyle("display", "none");
 
@@ -85,7 +82,7 @@ var StyleSelect = new Class({
         this.rebuild();
 
         if (this.options.inheritCSSClass) {
-            this.container.addClass(this.element.get("class"));
+            this.container.addClass(this.element.get("class")||"");
         }
 
         document.addEvent("click", function(e) {
@@ -209,6 +206,7 @@ var StyleSelect = new Class({
                         "title": (this.options.usetitles)?oOpt.get("text"):"",
                         "data-value": oOpt.get("value")
                     }).inject(this.list);
+
                     if (this.options.checkboxes) {
                         oLI.set("html", "");
                         oLI.adopt(
